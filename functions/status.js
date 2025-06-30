@@ -3,6 +3,10 @@ import { Redis } from "@upstash/redis";
 
 export async function handler(event) {
   try {
+    if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+      console.error('Missing Upstash Redis configuration');
+      return { statusCode: 500, body: JSON.stringify({ error: 'Redis not configured' }) };
+    }
     const tenantId =
       (event.queryStringParameters && event.queryStringParameters.t) ||
       new URL(event.rawUrl || `https://dummy`).searchParams.get("t");
