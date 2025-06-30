@@ -3,11 +3,6 @@ import "./initFetch.js";
 
 import { Redis } from '@upstash/redis';
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN
-});
-
 export async function handler(event) {
   if (event.httpMethod !== 'POST') {
     return {
@@ -15,6 +10,16 @@ export async function handler(event) {
       body: JSON.stringify({ error: 'Método não permitido' })
     };
   }
+
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    console.error('Missing Upstash Redis configuration');
+    return { statusCode: 500, body: JSON.stringify({ error: 'Redis not configured' }) };
+  }
+
+  const redis = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN
+  });
 
   let body;
   try {

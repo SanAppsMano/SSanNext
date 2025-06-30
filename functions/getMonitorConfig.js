@@ -2,15 +2,20 @@ import "./initFetch.js";
 // functions/getMonitorConfig.js
 import { Redis } from '@upstash/redis';
 
-const redisClient = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN
-});
-
 export async function handler(event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Método não permitido' }) };
   }
+
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    console.error('Missing Upstash Redis configuration');
+    return { statusCode: 500, body: JSON.stringify({ error: 'Redis not configured' }) };
+  }
+
+  const redisClient = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN
+  });
 
   let body;
   try {
