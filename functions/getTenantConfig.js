@@ -1,3 +1,4 @@
+import "./initFetch.js";
 // functions/getTenantConfig.js
 
 import faunadb from 'faunadb';  // exemplo de banco; mantenha o que você já usa

@@ -1,3 +1,4 @@
+import "./initFetch.js";
 import Ably from 'ably/promises';
 
 export async function handler(event) {

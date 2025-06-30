@@ -1,3 +1,4 @@
+import "./initFetch.js";
 import Ably from 'ably/promises';
 
 const ably = new Ably.Rest(process.env.ABLY_API_KEY);

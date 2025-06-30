@@ -1,3 +1,4 @@
+import "./initFetch.js";
 // functions/getMonitorConfig.js
 import { Redis } from '@upstash/redis';
 

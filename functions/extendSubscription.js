@@ -1,3 +1,4 @@
+import "./initFetch.js";
 // functions/extendSubscription.js
 import { Redis } from '@upstash/redis';
 

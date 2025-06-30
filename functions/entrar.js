@@ -1,3 +1,4 @@
+import "./initFetch.js";
 import { Redis } from "@upstash/redis";
 import { v4 as uuidv4 } from "uuid";
 import { publish } from "./ablyClient.js";

@@ -1,3 +1,4 @@
+import "./initFetch.js";
 // functions/registerMonitor.js
 import { Redis } from '@upstash/redis';
 import bcrypt from 'bcryptjs';
