@@ -5,8 +5,8 @@ import bcrypt from 'bcryptjs';
 
 export async function handler(event) {
   try {
-    const url       = new URL(event.rawUrl);
-    const tenantId  = url.searchParams.get('t');
+    const params    = event.queryStringParameters || {};
+    const tenantId  = params.t || new URL(event.rawUrl || 'https://dummy').searchParams.get('t');
     const { password } = JSON.parse(event.body || '{}');
     if (!tenantId || !password) {
       return { statusCode: 400, body: JSON.stringify({ error: 'Invalid request' }) };

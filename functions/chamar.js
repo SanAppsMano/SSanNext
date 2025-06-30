@@ -5,8 +5,9 @@ import { publish } from "./ablyClient.js";
 const LOG_TTL = 60 * 60 * 24 * 30; // 30 days
 
 export async function handler(event) {
-  const url      = new URL(event.rawUrl);
-  const tenantId = url.searchParams.get("t");
+  const tenantId =
+    (event.queryStringParameters && event.queryStringParameters.t) ||
+    new URL(event.rawUrl || "https://dummy").searchParams.get("t");
   if (!tenantId) {
     return { statusCode: 400, body: "Missing tenantId" };
   }
