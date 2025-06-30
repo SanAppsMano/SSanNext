@@ -2,15 +2,16 @@ import "./initFetch.js";
 import { Redis } from "@upstash/redis";
 
 export async function handler(event) {
-  const tenantId =
-    (event.queryStringParameters && event.queryStringParameters.t) ||
-    new URL(event.rawUrl || `https://dummy`).searchParams.get("t");
-  if (!tenantId) {
-    return { statusCode: 400, body: "Missing tenantId" };
-  }
+  try {
+    const tenantId =
+      (event.queryStringParameters && event.queryStringParameters.t) ||
+      new URL(event.rawUrl || `https://dummy`).searchParams.get("t");
+    if (!tenantId) {
+      return { statusCode: 400, body: "Missing tenantId" };
+    }
 
-  const redis  = Redis.fromEnv();
-  const prefix = `tenant:${tenantId}:`;
+    const redis  = Redis.fromEnv();
+    const prefix = `tenant:${tenantId}:`;
 
   const [currentCallRaw, callCounterRaw, ticketCounterRaw, attendantRaw, timestampRaw] =
     await redis.mget(
@@ -57,4 +58,8 @@ export async function handler(event) {
       names: nameMap || {},
     }),
   };
+  } catch (err) {
+    console.error('status error:', err);
+    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+  }
 }
