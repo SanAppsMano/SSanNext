@@ -1,4 +1,4 @@
-// Ably is loaded globally via CDN script
+// Ably and QRious are loaded locally
 
 const params = new URLSearchParams(window.location.search);
 const tenantId = params.get('t');
@@ -11,15 +11,20 @@ const qrImg = document.getElementById('qr');
 let ABLY_KEY;
 let ABLY_CHANNEL;
 
+const FUNCTIONS_BASE = '/.netlify/functions';
+
 async function init() {
-  const envRes = await fetch('/functions/env');
+  const envRes = await fetch(`${FUNCTIONS_BASE}/env`);
+  if (!envRes.ok) {
+    throw new Error('Failed to load environment');
+  }
   const env = await envRes.json();
   ABLY_KEY = env.ABLY_API_KEY;
   ABLY_CHANNEL = env.ABLY_CHANNEL;
 
   if (qrImg) {
     const url = `${window.location.origin}${window.location.pathname}?t=${tenantId}`;
-    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url)}`;
+    new QRious({ element: qrImg, value: url, size: 150 });
   }
 
   const ably = new Ably.Realtime({ key: ABLY_KEY });
@@ -39,16 +44,19 @@ async function init() {
   });
 
   btn.addEventListener('click', async () => {
-    const res = await fetch(`/functions/entrar?t=${tenantId}`);
-    const info = await res.json();
-    addHistory(`Você recebeu ticket ${info.ticketNumber}`);
+    const res = await fetch(`${FUNCTIONS_BASE}/entrar?t=${tenantId}`);
+    if (res.ok) {
+      const info = await res.json();
+      addHistory(`Você recebeu ticket ${info.ticketNumber}`);
+    }
   });
 
   updateStatus();
 }
 
 async function updateStatus() {
-  const res = await fetch(`/functions/status?t=${tenantId}`);
+  const res = await fetch(`${FUNCTIONS_BASE}/status?t=${tenantId}`);
+  if (!res.ok) return;
   const data = await res.json();
   statusEl.textContent = `Próximo: ${data.nextTicket || '-'} (esperando: ${data.waitingCount})`;
 }

@@ -13,8 +13,8 @@ Defina no painel da Netlify:
 - `ABLY_API_KEY` – chave de API da Ably
 - `ABLY_CHANNEL` – nome do canal Ably (ex.: `san-next`)
 
-O front-end carrega o SDK do Ably via CDN e exibe um QR code para
-compartilhar o link de atendimento (`/?t=<tenant>`).
+O front-end inclui localmente o SDK do Ably e o gerador de QR code,
+permitindo compartilhar o link de atendimento (`/?t=<tenant>`).
 
 ## Scripts
 Não há etapa de build necessária, apenas:
