@@ -7,9 +7,20 @@ const statusEl = document.getElementById('status');
 const historyEl = document.getElementById('history');
 const btn = document.getElementById('newTicket');
 const qrImg = document.getElementById('qr');
+let myTicket = localStorage.getItem('myTicket');
 
 let ABLY_KEY;
 let ABLY_CHANNEL;
+
+function beep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    osc.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.2);
+  } catch {}
+}
 
 const FUNCTIONS_BASE = '/.netlify/functions';
 
@@ -38,6 +49,12 @@ async function init() {
         break;
       case 'serve':
         addHistory(`Ticket ${data.ticketNumber} atendido`);
+        if (Number(data.ticketNumber) === Number(myTicket)) {
+          document.body.classList.add('highlight');
+          beep();
+          if (navigator.vibrate) navigator.vibrate(300);
+          setTimeout(() => document.body.classList.remove('highlight'), 3000);
+        }
         break;
     }
     updateStatus();
@@ -48,6 +65,8 @@ async function init() {
     if (res.ok) {
       const info = await res.json();
       addHistory(`Você recebeu ticket ${info.ticketNumber}`);
+      myTicket = info.ticketNumber;
+      localStorage.setItem('myTicket', myTicket);
     }
   });
 
