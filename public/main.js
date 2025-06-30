@@ -1,4 +1,4 @@
-import { Realtime } from '@ably/realtime';
+// Ably is loaded globally via CDN script
 
 const params = new URLSearchParams(window.location.search);
 const tenantId = params.get('t');
@@ -6,6 +6,7 @@ const tenantId = params.get('t');
 const statusEl = document.getElementById('status');
 const historyEl = document.getElementById('history');
 const btn = document.getElementById('newTicket');
+const qrImg = document.getElementById('qr');
 
 let ABLY_KEY;
 let ABLY_CHANNEL;
@@ -16,7 +17,12 @@ async function init() {
   ABLY_KEY = env.ABLY_API_KEY;
   ABLY_CHANNEL = env.ABLY_CHANNEL;
 
-  const ably = new Realtime({ key: ABLY_KEY });
+  if (qrImg) {
+    const url = `${window.location.origin}${window.location.pathname}?t=${tenantId}`;
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url)}`;
+  }
+
+  const ably = new Ably.Realtime({ key: ABLY_KEY });
   const channel = ably.channels.get(`${ABLY_CHANNEL}:${tenantId}`);
 
   channel.subscribe(msg => {
