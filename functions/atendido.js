@@ -69,3 +69,4 @@ export async function handler(event) {
     body: JSON.stringify({ attended: true, ticket: Number(ticket), duration, wait, ts }),
   };
 }
+export default handler;

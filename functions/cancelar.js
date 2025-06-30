@@ -70,3 +70,4 @@ export async function handler(event) {
   // Nada a cancelar
   return { statusCode: 200, body: JSON.stringify({ cancelled: false }) };
 }
+export default handler;

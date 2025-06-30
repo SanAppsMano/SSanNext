@@ -104,3 +104,4 @@ export async function handler(event) {
     body: JSON.stringify({ called: next, attendant, ts, wait, name }),
   };
 }
+export default handler;

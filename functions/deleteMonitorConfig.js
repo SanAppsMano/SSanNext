@@ -58,3 +58,4 @@ export async function handler(event) {
     };
   }
 }
+export default handler;

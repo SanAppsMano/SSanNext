@@ -52,3 +52,4 @@ export async function handler(event) {
     body: JSON.stringify({ empresa: stored.empresa })
   };
 }
+export default handler;

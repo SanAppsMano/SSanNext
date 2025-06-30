@@ -24,3 +24,4 @@ export async function handler(event) {
     body: JSON.stringify({ attended: list, numbers: nums, count: nums.length }),
   };
 }
+export default handler;

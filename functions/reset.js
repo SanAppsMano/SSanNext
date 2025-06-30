@@ -57,3 +57,4 @@ export async function handler(event) {
     body: JSON.stringify({ reset: true, attendant, ts }),
   };
 }
+export default handler;
